@@ -5,13 +5,18 @@ Simple Denial Of Service script written in python by yours truly.
 <p>
   ISP may throttle your internet with lots of use of this tool. Use a VPN. Learn how to protect yourself.
   <br>
+  <br>
   this tool is pretty straighforward, works for linux, should work for windows.
+  <br>
   <br>
   python3 Basilisk-DoS.py
   <br>
+  <br>
   input the target IP address
   <br>
+  <br>
   Input the target port
+  <br>
   <br>
   let the script run for a while
 
